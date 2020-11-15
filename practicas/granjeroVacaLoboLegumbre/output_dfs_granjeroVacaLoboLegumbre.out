@@ -1,0 +1,9 @@
+Solución de 8 pasos encontrada en 9 intentos 
+Paso # 0 aplicando NIL obtenemos -> ((1 1 1 1) (0 0 0 0)) 
+Paso # 1 aplicando (VIAJA-VACA A) obtenemos -> ((1 1 0 0) (0 0 1 1)) 
+Paso # 2 aplicando (VIAJA-SOLO S) obtenemos -> ((1 1 0 1) (0 0 1 0)) 
+Paso # 3 aplicando (VIAJA-LEGUMBRE E) obtenemos -> ((0 1 0 0) (1 0 1 1)) 
+Paso # 4 aplicando (VIAJA-VACA A) obtenemos -> ((0 1 1 1) (1 0 0 0)) 
+Paso # 5 aplicando (VIAJA-LOBO O) obtenemos -> ((0 0 1 0) (1 1 0 1)) 
+Paso # 6 aplicando (VIAJA-SOLO S) obtenemos -> ((0 0 1 1) (1 1 0 0)) 
+Paso # 7 aplicando (VIAJA-VACA A) obtenemos -> ((0 0 0 0) (1 1 1 1)) 

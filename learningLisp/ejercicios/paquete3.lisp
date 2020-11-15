@@ -427,3 +427,97 @@
 
 (print "Inciso 19")
 ; Defina una función recursiva Mapea que opere exactamente igual que la función mapear de Common Lisp
+	(defvar org)(defvar orgMap)
+	(setq org '(ce ome elli nahui mahquilli chiquace chiqome chiqelli chiqnahui))
+	(setq orgMap '(1 2 3 4 5 6 7 8 9))
+	(defun mapeo (fun l1 l2) 
+		(if (null l1)
+			'()
+			(cons 
+				(funcall fun (first l1) (first l2))
+				(mapeo fun (rest l1) (rest l2))
+			)
+		)
+	)
+	(print org)
+	(print orgMap)
+	(loop for i in (mapeo #'(lambda (x y) (cons x y)) org orgMap) do (print i))(fresh-line)
+
+
+(print "Inciso 20")
+; Defina una función recursiva Aplana que reciba como argumento una lista con elementos anidados a cualquier nivel de profundidad y, como respuesta, entregue una lista conteniendo los mismo elementos pero todos ellos al nivel principal de profundidad
+	(setq input '(2 (3 4 (5 6 7)) (5 4) 5 9.0 5))
+	(defun aplana (lista)
+		(let (
+			(nuevaLista '())
+			(hayListaAnidada 0)
+			)
+			(loop 
+				for i in lista
+			do
+				(if (listp i)
+					(progn
+						(loop 
+							for j in i
+						do
+							(setq nuevaLista (append nuevaLista (list j)))
+						)
+						(setq hayListaAnidada 1)
+					)
+					(setq nuevaLista (append nuevaLista (list i)))
+				)
+			)
+			(if (= 1 hayListaAnidada) (aplana nuevaLista) nuevaLista)
+		)
+	)
+	(print input)
+	(print (aplana input)) (fresh-line)
+
+
+(print "Inciso 21")
+; Defina una función Elimina que reciba como argumento una lista y un número real n. La función debe entregar como resultado una copia de la lista original, con la cual se hayan eliminado todos los elementos que no sean numéricos, así como todos aquellos elementos numéricos que sean menores o iguales que n
+	(setq input '(A 2.0 3 3.1416 8 8.91 9.2 F (a b) 6))
+	(defun elimina (lista n)
+		(if (null lista)
+			'()
+			(if (or 
+					(not (numberp (first lista))) 
+					(and 
+						(numberp (first lista)) 
+						(<= (first lista) n)
+					)
+				)
+				(elimina (rest lista) n)
+				(cons 
+					(first lista) 
+					(elimina (rest lista) n)
+				)
+			)
+		)
+	)
+	(print input)
+	(print (elimina input 5.0)) (fresh-line)
+
+
+(print "Inciso 22")
+; Defina una función recursiva PegaYCambia que reciba como argumento dos listas lista1, lista2 y dos elementos elem1, elem2. Como respuesta, la función debe entregar una lista donde concatene las dos listas originales, pero substituyendo todas las ocurrencias (en ambas listas) de elem1 por elem2
+	(defun pegaYCambia (lista1 lista2 elem1 elem2)
+		(if (null lista1)
+			(if (null lista2)
+				'()
+				(cons 
+					(if (equal (first lista2) elem1) elem2 (first lista2))
+					(pegaYCambia lista1 (rest lista2) elem1 elem2)
+				)
+			)
+			(cons
+				(if (equal (first lista1) elem1) elem2 (first lista1))
+				(pegaYCambia (rest lista1) lista2 elem1 elem2)
+			)
+		)
+	)
+	(print (pegaYCambia '(A B C D E F) '(F E D C B A) 'A 'Z))
+
+
+(print "Inciso 23")
+; Defina una función QSort que reciba como argumento único una lista e implemente con ellos el algoritmo de ordenamiento Quick Sort, ignorando por completo aquellos elementos de la lista original que no sean numéricos. La respuesta de la función debe ser una lista con los elementos numéricos de la original ordenados de forma ascendente.
