@@ -177,26 +177,90 @@
 
 
 ; ==== Bloque de las operaciones ===
-(defparameter possibleOps '())
+(defparameter possibleOps '(
+	(:viaja-vaca 		A)
+	(:viaja-lobo 		O)
+	(:viaja-legumbre 	E)
+	(:viaja-solo		S)
+	)
+)
 
 ;Si la operaciones son dinámicas, usar esta función para generarlas
 (defun addOps ()
-	;To-Do
 )
 
 ;Dado un estado y una operación, determina si es válido aplicarla o no
 (defun isOpValid (state op)
-	;To-Do
+	(let (
+		(izq (first state))
+		(der (second state))
+		(animal -1)
+		)
+		(cond 
+			((equal 'E (second op)) (setq animal 0))
+			((equal 'O (second op)) (setq animal 1))
+			((equal 'A (second op)) (setq animal 2))
+			((equal 'S (second op)) (setq animal 3))
+		)
+		(let (
+			(isIzq (equal 1 (nth animal izq)))
+			(isDer (equal 1 (nth animal der)))
+			)
+			(or
+				(and (equal 1 (nth 3 izq)) isIzq)
+				(and (equal 1 (nth 3 der)) isDer)
+			)
+		)
+	)
 )
 
 ;Dado un estado regresa las operaciones puede (o le conviene) aplicar
 (defun getOps (state)
-	;To-Do
+	(let (
+		(stateOps (copy-list possibleOps))
+		)
+		(loop for op in possibleOps do
+			(setq stateOps 
+				(remove-if #'(lambda (x) (not (isOpValid state x))) stateOps)
+			)
+		)
+		stateOps
+	)
 )
 
 ;Dado un estado y una operación, crea un nuevo estado con la operación aplicada
 (defun doOp (state op)
-	;To-Do
+	(let (
+		(izq (copy-list (first state)))
+		(der (copy-list (second state)))
+		(animal -1)
+		)
+		(cond 
+			((equal 'E (second op)) (setq animal 0))
+			((equal 'O (second op)) (setq animal 1))
+			((equal 'A (second op)) (setq animal 2))
+			((equal 'S (second op)) (setq animal 3))
+		)
+		(let (
+			(isIzq (equal 1 (nth animal izq)))
+			)
+			(if isIzq
+				(progn 
+					(setf (nth animal izq) 0)
+					(setf (nth 3 izq) 0)
+					(setf (nth animal der) 1)
+					(setf (nth 3 der) 1)
+				)
+				(progn 
+					(setf (nth animal izq) 1)
+					(setf (nth 3 izq) 1)
+					(setf (nth animal der) 0)
+					(setf (nth 3 der) 0)
+				)
+			)
+		)
+		(list izq der)
+	)
 )
 
 
@@ -207,12 +271,22 @@
 
 ;Dado un estado, determina si es válido bajo las reglas del problema
 (defun isStateValid (state)
-	;To-Do
+	(let (
+		(izq (first state))
+		(der (second state))
+		(aloneSide NIL)
+		)
+		(if (equal 0 (nth 3 izq)) ;El lado solo es donde no pueden estar juntos
+			(setq aloneSide izq)
+			(setq aloneSide der)
+		)
+		(not (canEatEachOther aloneSide))
+	)
 )
 
 ;Dado un estado, determina si es el estado meta
 (defun isGoalState (state)
-	;To-Do
+	(equal state goalState)
 )
 
 ;Si el goalScore es dinámico o se requiere para cacular el stateScore, esta función lo genera
@@ -222,12 +296,12 @@
 
 ;Determina la puntuación de un estado respecto al origen y la meta
 (defun getStateScore (state cost)
-	;To-Do
+	0
 )
 
 ;Dado un estado meta, genera la solucion como es requerida en el problema
 (defun getRequiredSolution (state)
-	;To-Do
+	(rememberPath state)
 )
 
 
@@ -236,6 +310,19 @@
 
 ;To-Do, Aqui se deben colocar todas las funciones adicionales que sean útiles
 ;		para llenar las funciones previas respecto al problema resuelto
+
+(defun canEatEachOther (side) ;reglas lógicas del problema
+	(let (
+		(legumbre (equal 1 (nth 0 side)))
+		(lobo (equal 1 (nth 1 side)))
+		(vaca (equal 1 (nth 2 side)))
+		)
+		(or 
+			(and legumbre vaca)
+			(and lobo vaca)
+		)
+	)
+)
 
 
 
@@ -344,3 +431,9 @@
 (defun a-star ()
 	(callSearch :a-star start end)
 )
+
+(setq start '((1 1 1 1) (0 0 0 0)))
+(setq end '((0 0 0 0) (1 1 1 1)))
+(print (a-star))
+(printQueue)
+(print (isQueueEmpty))

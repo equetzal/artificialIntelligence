@@ -43,6 +43,31 @@
 		)
 	)
 )
+(defun getOps (state)
+	(let (
+		(usedSlots '())
+		(optionalSlots '())
+		(slotId 0)
+		)
+
+		(setq slotId 0)
+		(loop for el in state do
+			(unless (null el)
+				(setq usedSlots (adjoin slotId))
+			)
+			(setq slotId (+ 1 slotId))
+		)
+
+		(loop for el in state do
+			(unless (null el)
+				(setq usedSlots (adjoin slotId))
+			)
+			(setq slotId (+ 1 slotId))
+		)
+
+	)
+)
+
 (defvar someState '(NIL (B 4) (A 5) NIL NIL NIL NIL NIL NIL NIL))
 (print mosBoard)
 (addOps)
